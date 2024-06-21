@@ -1,0 +1,46 @@
+async function dataWorks(){
+    try {
+        const response = await fetch("http://localhost:5678/api/works");
+        const data = await response.json();
+
+        return data;
+        
+    } catch(error){
+        console.log(error);
+    }
+}
+
+
+const gallery = document.querySelector(".gallery");
+
+function displayWorks(data){
+
+    for (let i = 0; i < data.length; i ++) {
+        // tags building
+        const figure = document.createElement("figure");
+        const img = document.createElement("img");
+        const figcaption = document.createElement("figcaption");
+
+        // tags fill
+        img.src = data[i].imageUrl
+        img.setAttribute("alt", data[i].title);
+        figcaption.innerText = data[i].title;
+
+        figure.appendChild(img);
+        figure.appendChild(figcaption);
+
+        // we fill the div class gallery with datas from API
+        gallery.appendChild(figure);
+
+    }
+}
+
+
+
+async function display(){
+
+    displayWorks(await dataWorks());
+}
+
+display();
+

@@ -1,7 +1,8 @@
 import { datas } from "./tools/datasParse.js"; // Api treatment
 import { buildPic } from "./tools/previewTreatment.js"; // preview pic
 import { options } from "./tools/options.js"; // options treatment
-//import { displayWorks } from "./app.js";
+import { displayWorks } from "./app.js";
+import { danger } from "./connection.js";
 
 let token = localStorage.getItem("token");
 let userId = localStorage.getItem("id");
@@ -220,7 +221,6 @@ const deleteWork = function() {
 
     for (let i = 0; i < trashButtons.length; i++) {
         trashButtons[i].addEventListener("click", async(e) => {
-
             const id = e.target.dataset.id;
             let worksId = `http://localhost:5678/api/works/${id}`;
 
@@ -316,7 +316,7 @@ const validate = function(){
         })
     }
     // then turn it to number
-    categoryId = parseInt(categoryId) //vérifier typeOf avant voir s'il faut garder cette ligne de code.
+    categoryId = parseInt(categoryId)
 
     const inputTile = document.querySelector(".modalContent form input");
     inputTile.addEventListener("input", (e)=>{
@@ -329,26 +329,36 @@ const validate = function(){
 
         title = inputTile.value;
 
-        const formData = new FormData();
-        formData.append("title", title);
-        formData.append("image", attrImage);
-        formData.append("category", categoryId);
+        if (inputTile.value == ""){
+            const label = document.querySelector("form#photo label");
+            const input = document.querySelector("form#photo #title");
+            const message = "Ce champ est obligatoire";
+            danger(input, label, message);
+            return;
 
-        // i check if ok
-        /*
-        for (const value of formData.values()) {
-            console.log(value);
-          }
-        */
-        const api = "http://localhost:5678/api/works";
-        const method = "POST";
-        await datas(api, method, formData, token, userId);
+        } else {
 
-        //document.querySelector(".gallery").innerHTML = "";
-        //displayWorks(await datas(api));
-
-        document.querySelector(".modalWrapper .close").click();
-
+            const formData = new FormData();
+            formData.append("title", title);
+            formData.append("image", attrImage);
+            formData.append("category", categoryId);
+    
+            // i check if ok
+            /*
+            for (const value of formData.values()) {
+                console.log(value);
+              }
+            */
+            const api = "http://localhost:5678/api/works";
+            const method = "POST";
+            await datas(api, method, formData, token, userId);
+    
+            document.querySelector(".gallery").innerHTML = "";
+            displayWorks(await datas(api));
+    
+            document.querySelector(".modalWrapper .close").click();
+        
+        }
     })
 
 }

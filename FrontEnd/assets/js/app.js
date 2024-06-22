@@ -24,6 +24,8 @@ document.addEventListener('DOMContentLoaded', async ()=> {
 
 export function displayWorks(worksData){
     
+    gallery.innerHTML = ""; // We clear gallery before adding new works
+
     for (let i = 0; i < worksData.length; i ++) {
         // tags building
         const figure = document.createElement("figure");
@@ -46,12 +48,13 @@ export function displayWorks(worksData){
 
 async function filterCategory(){
 
-    const categoryDatas = await datas(works);        // Waiting for api datas
     const allButtons = document.querySelectorAll("#portfolio button");
 
     for (let i = 0; i < allButtons.length; i ++) {
-        allButtons[i].addEventListener("click", (e)=>{
-            
+        allButtons[i].addEventListener("click", async(e)=>{
+
+            const categoryDatas = await datas(works); // Here we update datas before sorting
+
             if (allButtons[ i ].id == "allProjects"){
                 gallery.innerHTML = "";
                 displayWorks(categoryDatas);
@@ -121,12 +124,15 @@ function buttonsBuilder(){
 function checkAuthStatus() {
     const token = localStorage.getItem('token');
     const categoryFilter = document.querySelector(".selectWorks");
+    const editDiv = document.querySelector(".editMode");
+    
     if (token) {
 
         login.style.display = "none";
         logout.style.display = "inline";
         modalModify.style.display = "inline-block";
         categoryFilter.style.display = "none";
+        editDiv.style.display = "flex";
 
     } else {
 
@@ -134,7 +140,7 @@ function checkAuthStatus() {
         logout.style.display = "none";
         modalModify.style.display ="none";
         categoryFilter.style.display = "flex";
-
+        editDiv.style.display = "none";
     }
 }
 logout.addEventListener('click', async() => {

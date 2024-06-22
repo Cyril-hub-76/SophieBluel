@@ -53,6 +53,18 @@ body {
 	font-family: 'Work Sans' ;
 	font-size: 14px;
 }
+.editMode {
+	width: 100%;
+	height: 50px;
+	background: #000;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	display: none;
+}
+.editMode i, .editMode h3 {
+	color: #fff
+}
 header {
 	display: flex;
 	justify-content: space-between;

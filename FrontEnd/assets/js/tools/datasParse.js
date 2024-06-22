@@ -22,26 +22,28 @@ export let datas = async function(api, method, body, token = null, userId = null
         if (method === "DELETE") {
             options = {
                 method: method,
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
+                headers: headers
+                // headers: {
+                //     'Authorization': `Bearer ${token}`
+                // }
             };
         }
 
         fetch(api, options)
-            .then(async function(response) {
+            .then(function(response) {
                 if (!response.ok) {
                     return response.text()
-                        .then(function(text) {
-                            throw new Error(`Status: ${response.status}, message: ${text}`);
+                        .then(function() {
+                            throw new Error(`Status: ${response.status}, message: ${response.url} ${response.statusText}`);
                         });
                 }
                 if (response.status === 204) {
                     return;
                 }
-                return response.json().catch(function() {
-                    return;
-                });
+                return response.json();
+                // return response.json().catch(function() {
+                //     return;
+                // });
             })
             .then(function(data) {
                 resolve(data);
